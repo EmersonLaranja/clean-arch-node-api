@@ -1,15 +1,15 @@
 import {
-  AddAccount,
-  AddAccountModel,
-  AccountModel,
-  EmailValidator,
-} from "./signup-protocols";
-import {
   InvalidParamError,
   MissingParamError,
   ServerError,
 } from "../../errors";
 import { SignUpController } from "./signup";
+import {
+  AccountModel,
+  AddAccount,
+  AddAccountModel,
+  EmailValidator,
+} from "./signup-protocols";
 
 interface SutTypes {
   sut: SignUpController;
@@ -192,5 +192,23 @@ describe("SignUp Controller", () => {
       email: "any_email@mail.com",
       password: "any_password",
     });
+  });
+
+  test("Should return 500 if AddAccount throws", () => {
+    const { sut, addAccountStub } = makeSut();
+    jest.spyOn(addAccountStub, "add").mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const httpRequest = {
+      body: {
+        name: "any_name",
+        email: "any_email@mail.com",
+        password: "any_password",
+        passwordConfirmation: "any_password",
+      },
+    };
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.statusCode).toBe(500);
+    expect(httpResponse.body).toEqual(new ServerError());
   });
 });
