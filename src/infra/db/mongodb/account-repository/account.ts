@@ -13,12 +13,6 @@ export class AccountMongoRepository implements AddAccountRepository {
 
     if (accountById === null) throw new Error("Account not found");
 
-    const { _id, ...accountWithoutId } = accountById;
-
-    const account = Object.assign({}, accountWithoutId, {
-      id: _id.toHexString(),
-    }) as AccountModel;
-
-    return account;
+    return MongoHelper.map(accountById);
   }
 }
