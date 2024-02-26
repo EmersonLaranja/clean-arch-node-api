@@ -1,4 +1,3 @@
-import Authentication from "../../../domain/usecases/authentication";
 import { InvalidParamError, MissingParamError } from "../../errors";
 import {
   badRequest,
@@ -6,8 +5,13 @@ import {
   serverError,
   unauthorized,
 } from "../../helpers/http-helper";
-import { Controller, HttpRequest, HttpResponse } from "../../protocols";
-import { EmailValidator } from "../signup/signup-protocols";
+import {
+  Controller,
+  EmailValidator,
+  Authentication,
+  HttpRequest,
+  HttpResponse,
+} from "../login/login-protocols";
 
 export default class LoginController implements Controller {
   constructor(
@@ -38,10 +42,7 @@ export default class LoginController implements Controller {
         return unauthorized();
       }
 
-      return {
-        body: {},
-        statusCode: 200,
-      };
+      return ok({ accessToken });
     } catch (error: any) {
       return serverError(error);
     }
