@@ -1,3 +1,3 @@
-export default class Authentication {
-  async auth(email: string, password: string): Promise<string>;
+export interface Authentication {
+  auth(email: string, password: string): Promise<string>;
 }
